@@ -1,5 +1,3 @@
-const connectDB = require('./mongo/connectDB')
-const startServer = require('./graphql/startServer')
-
-connectDB()
-startServer()
+require('dotenv').config()
+require('./mongo/connectDB')()
+require('./graphql/startServer')()
