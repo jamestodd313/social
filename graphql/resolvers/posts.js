@@ -1,6 +1,6 @@
-const Post = require('../mongo/models/Post')
+const Post = require('../../mongo/models/Post')
 
-const resolvers = {
+module.exports = {
     Query: {
         getPosts: async ()=> {
             try{
@@ -12,5 +12,3 @@ const resolvers = {
         }
     } 
 }
-
-module.exports = resolvers
