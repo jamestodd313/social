@@ -39,14 +39,19 @@ module.exports = {
             return newPost
         },
         deletePost: async(parent, args, context, info)=> {
-            const user = await validateToken(context)
-            const post = await Post.findById(args.postId)
+            const user = validateToken(context)
+            try{
+                const post = await Post.findById(args.postId)
 
-            if(!user.username === post.user.username) throw new AuthenticationError('Unauthorized')
-
-            await post.delete()
-        
-            return `Post ${args.postId} has been successfully deleted.`
+                if(!user.username === post.user.username) throw new AuthenticationError('Unauthorized')
+    
+                await post.delete()
+            
+                return `Post ${args.postId} has been successfully deleted.`
+            }catch(err){
+                throw new Error(err)
+            }
+            
         }
     }
 }
