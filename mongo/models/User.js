@@ -5,6 +5,6 @@ const UserSchema = new mongoose.Schema({
     password: String,
     email: String,
     createdAt: String
-})
+}, { collation: { locale: 'en', strength: 2 } })
 
 module.exports = mongoose.model('User', UserSchema)

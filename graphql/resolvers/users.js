@@ -1,28 +1,20 @@
-const bcrypt = require('bcryptjs')
-const jwt = require('jsonwebtoken')
-const User = require('../../mongo/models/User')
+const { checkErrors, createUser, validateRegistration, validateLogin } = require('../utils/auth-validators')
 
 module.exports = {
     Mutation: {
         async registerUser(parent, args, context, info){
             let {username, password, confirmPassword, email} = args.registrationInput
-            password = await bcrypt.hash(password, Number(process.env.BCRYPT_COST))
+            const errors = await validateRegistration(username, password, confirmPassword, email)
+            checkErrors(errors)
 
-            const userToCreate = new User({
-                username,
-                password,
-                email,
-                createdAt: new Date().toISOString()
-            })
-            const newUser = await userToCreate.save()
-
-            const token = jwt.sign({
-                id: newUser.id, 
-                email: newUser.email, 
-                username: newUser.username,
-            }, process.env.JWT_SECRET, {expiresIn: '1h'})
-            
-            return {...newUser._doc, id: newUser.id, token}
+            const newUser = await createUser(username, password, email)
+            return newUser
+        },
+        async signIn(parent, args, context, info){
+            let {email, password} = args.loginInfo
+            let user = await validateLogin(email, password)
+            return user
         }
     }
 }
+

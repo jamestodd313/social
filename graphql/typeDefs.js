@@ -21,11 +21,16 @@ const typeDefs = gql`
         email: String!,
         createdAt: String,
     }
+    input LoginInfo{
+        email: String!,
+        password: String!
+    }
     type Query{
         getPosts: [Post]
     }
     type Mutation{
-        registerUser(registrationInput: RegistrationInput): User!
+        registerUser(registrationInput: RegistrationInput): User!,
+        signIn(loginInfo: LoginInfo): User!
     }
 `
 module.exports = typeDefs
