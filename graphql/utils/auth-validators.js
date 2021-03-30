@@ -1,4 +1,4 @@
-const { UserInputError } = require('apollo-server-errors')
+const { UserInputError, AuthenticationError } = require('apollo-server-errors')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const User = require('../../mongo/models/User')
@@ -91,5 +91,18 @@ const validateLogin = async(email, password)=> {
     return {...userToSignIn._doc, id: userToSignIn.id, token}
 }
 
+const validateToken = (context)=> {
+    let auth = context.req.headers.authorization
+    if(!auth) throw new Error('No auth header recevied.')
+    const token = auth.split('Bearer ')[1]
+    if(!token) throw new Error("Couldn't pull token from auth header. Should be formatted `Bearer token`.")
+    try{
+        let validatedUser = jwt.verify(token, process.env.JWT_SECRET)
+        return validatedUser
+    } catch(err){
+        throw new AuthenticationError('Invalid or expired token. Sign in and try again.')
+    }
 
-module.exports = {validateRegistration, createUser, checkErrors, validateLogin}
+} 
+
+module.exports = {validateRegistration, createUser, checkErrors, validateLogin, validateToken}
