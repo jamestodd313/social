@@ -7,7 +7,12 @@ module.exports = {
         getPosts: async (parent, args, context, info)=> {
             try{
                 const posts = await Post.find().sort({createdAt: -1})
-                return posts
+                let populatedPosts = []
+                for(let post of posts){
+                    let populatedPost = await post.populate('user').populate({path: 'likes', populate: {path: 'user', model: 'User'}}).populate({path: 'comments', populate: {path: 'user', model: 'User'}}).execPopulate()
+                    populatedPosts.push(populatedPost)
+                } 
+                return populatedPosts
             }catch(err){
                 throw new Error(err)
             }
@@ -16,12 +21,11 @@ module.exports = {
             let {postId} = args
             try {
                 const post = await Post.findById(postId)
-                if(post) return post
+                if(post) return await post.populate('user').populate({path: 'likes', populate: {path: 'user', model: 'User'}}).populate({path: 'comments', populate: {path: 'user', model: 'User'}}).execPopulate()
                 else throw new Error(`Post ${postId} NOT FOUND`)
             } catch (error) {
                 throw new Error(error)
             }
- 
         }
     },
     Mutation: {
@@ -35,7 +39,7 @@ module.exports = {
               createdAt: new Date().toISOString(),
             }) 
             let newPost = await postToCreate.save()
-            newPost = await newPost.populate('user').execPopulate()
+            newPost = await newPost.populate('user').populate({path: 'likes', populate: {path: 'user', model: 'User'}}).populate({path: 'comments', populate: {path: 'user', model: 'User'}}).execPopulate()
             return newPost
         },
         deletePost: async(parent, args, context, info)=> {

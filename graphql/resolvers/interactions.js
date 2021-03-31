@@ -22,7 +22,7 @@ module.exports = {
             try{
                 postToCommentOn.comments.unshift(comment)
                 let postWithNewComment = await postToCommentOn.save()
-                return postWithNewComment
+                postWithNewComment = await postWithNewComment.populate('user').populate({path: 'likes', populate: {path: 'user', model: 'User'}}).populate({path: 'comments', populate: {path: 'user', model: 'User'}}).execPopulate()
             }catch(err){
                 throw new Error(err)
             }
@@ -40,11 +40,25 @@ module.exports = {
             if(postWithComment.comments[indexOfComment].username != user.username) throw new ForbiddenError("You are not authorized to delete this comment.")
             postWithComment.comments.splice(indexOfComment, 1)
 
-            const postWithCommentRemoved = await postWithComment.save()
+            let postWithCommentRemoved = await postWithComment.save()
+            postWithCommentRemoved = await postWithCommentRemoved.populate('user').populate({path: 'likes', populate: {path: 'user', model: 'User'}}).populate({path: 'comments', populate: {path: 'user', model: 'User'}}).execPopulate()
             return postWithCommentRemoved
         },
         likePost: async(parent, args, context, info)=>{
+            const {postId} = args
+            const user = validateToken(context)
 
+            const post = await Post.findById(postId)
+            if(!post) throw new UserInputError(`Couldn't find a post with the ID ${postId}.`)
+
+            let isAlreadyLiked = await post.likes.find(like => like.username == user.username)
+            if(isAlreadyLiked) post.likes.filter(like=> like.username == user.username)
+            else post.likes.push({ username: user.username, createdAt: new Date().toISOString(), user: user.id })
+
+            let postWithUpdatedLikes = await post.save()
+            postWithUpdatedLikes = await postWithUpdatedLikes.populate('user').populate({path: 'likes', populate: {path: 'user', model: 'User'}}).populate({path: 'comments', populate: {path: 'user', model: 'User'}}).execPopulate()
+
+            return postWithUpdatedLikes
         }
     }
 }
