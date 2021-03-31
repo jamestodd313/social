@@ -13,7 +13,7 @@ const generateToken = (user)=> {
         id: user.id, 
         email: user.email, 
         username: user.username,
-    }, process.env.JWT_SECRET, {expiresIn: '1h'})
+    }, process.env.JWT_SECRET, {expiresIn: '12h'})
     return token
 }
 const isValidEmail = (email)=> {
@@ -45,26 +45,16 @@ const validateRegistration = async(username, password, confirmPassword, email)=>
     return errors
 }
 const createUser = async(username, password, email)=> {
-        let hashword = await bcrypt.hash(password, Number(process.env.BCRYPT_COST))
-
-        const userToCreate = new User({
-            username,
-            email,
-            password: hashword,
-            createdAt: new Date().toISOString()
-        })
-        const newUser = await userToCreate.save()
-
-
-        // const token = jwt.sign({
-        //     id: newUser.id, 
-        //     email: newUser.email, 
-        //     username: newUser.username,
-        // }, process.env.JWT_SECRET, {expiresIn: '1h'})
-
-        const token = generateToken(newUser)
-
-        return {...newUser._doc, id: newUser.id, token}
+    let hashword = await bcrypt.hash(password, Number(process.env.BCRYPT_COST))
+    const userToCreate = new User({
+        username,
+        email,
+        password: hashword,
+        createdAt: new Date().toISOString()
+    })
+    const newUser = await userToCreate.save()
+    const token = generateToken(newUser)
+    return {...newUser._doc, id: newUser.id, token}
 }
 const validateLogin = async(email, password)=> {
     const errors = {

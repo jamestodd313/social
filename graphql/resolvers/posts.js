@@ -43,7 +43,7 @@ module.exports = {
             try{
                 const post = await Post.findById(args.postId)
 
-                if(!user.username === post.user.username) throw new AuthenticationError('Unauthorized')
+                if(user.username != post.username) throw new AuthenticationError(`You are not authorized to delete post ${args.postId}`)
     
                 await post.delete()
             
