@@ -40,6 +40,7 @@ module.exports = {
             }) 
             let newPost = await postToCreate.save()
             newPost = await newPost.populate('user').populate({path: 'likes', populate: {path: 'user', model: 'User'}}).populate({path: 'comments', populate: {path: 'user', model: 'User'}}).execPopulate()
+            context.pubsub.publish('NEW_POST', {getNewPost: newPost})
             return newPost
         },
         deletePost: async(parent, args, context, info)=> {
@@ -56,6 +57,11 @@ module.exports = {
                 throw new Error(err)
             }
             
+        }
+    },
+    Subscription: {
+        getNewPost: {
+            subscribe: async (parent, args, context, info)=> context.pubsub.asyncIterator('NEW_POST')
         }
     }
 }
