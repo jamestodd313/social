@@ -2,6 +2,9 @@ const PostResolvers = require('./posts')
 const UserResolvers = require('./users')
 const InteractionResolvers = require('./interactions')
 const resolvers = {
+    Post: {
+        ...PostResolvers.Post
+    },
     Query: {
         ...PostResolvers.Query,
         ...UserResolvers.Query,

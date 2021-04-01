@@ -1,8 +1,12 @@
-const { AuthenticationError } = require('apollo-server-errors')
+const { AuthenticationError, UserInputError } = require('apollo-server-errors')
 const Post = require('../../mongo/models/Post')
 const { validateToken } = require('../utils/auth-validators')
 
 module.exports = {
+    Post:{
+        commentCount: (parent, args, context, info)=> parent.comments.length,
+        likeCount: (parent, args, context, info)=> parent.likes.length,
+    },
     Query: {
         getPosts: async (parent, args, context, info)=> {
             try{
@@ -31,6 +35,8 @@ module.exports = {
     Mutation: {
         createPost: async(parent, args, context, info)=> {
             let {body} = args
+            if(!body || body.trim() == '') throw new UserInputError("Cannot submit an empty post.")
+
             const user = validateToken(context)
             const postToCreate = new Post({
               body,
@@ -45,18 +51,12 @@ module.exports = {
         },
         deletePost: async(parent, args, context, info)=> {
             const user = validateToken(context)
-            try{
-                const post = await Post.findById(args.postId)
+            const post = await Post.findById(args.postId)
 
-                if(user.username != post.username) throw new AuthenticationError(`You are not authorized to delete post ${args.postId}`)
-    
-                await post.delete()
-            
-                return `Post ${args.postId} has been successfully deleted.`
-            }catch(err){
-                throw new Error(err)
-            }
-            
+            if(!post) throw new UserInputError(`Could not find a post with the ID of ${args.postId}`)
+            if(user.username != post.username) throw new AuthenticationError(`You are not authorized to delete post ${args.postId}`)
+            await post.delete()
+            return `Post ${args.postId} has been successfully deleted.`
         }
     },
     Subscription: {
