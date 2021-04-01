@@ -52,7 +52,7 @@ module.exports = {
             if(!post) throw new UserInputError(`Couldn't find a post with the ID ${postId}.`)
 
             let isAlreadyLiked = await post.likes.find(like => like.username == user.username)
-            if(isAlreadyLiked) post.likes.filter(like=> like.username == user.username)
+            if(isAlreadyLiked) post.likes = post.likes.filter(like=> like.username !== user.username)
             else post.likes.push({ username: user.username, createdAt: new Date().toISOString(), user: user.id })
 
             let postWithUpdatedLikes = await post.save()
