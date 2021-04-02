@@ -7,6 +7,18 @@ dayjs.extend(relativeTime)
 
 export const Post = ({post: {id, body, createdAt, user, likes, likeCount, comments, commentCount}}) => {
     let liked
+    const handleLike = ()=> {
+        console.log(`liking post ${id}`)
+    }
+    const handleReply = ()=> {
+        console.log(`replying to post ${id}`)
+    }
+    const handleShare = ()=> {
+        console.log(`sharing post ${id}`)
+    }
+    const handleBlock = ()=> {
+        console.log(`blocking ${user.username}`)
+    }
     return (
         <Card fluid >
             <CardContent>
@@ -17,8 +29,8 @@ export const Post = ({post: {id, body, createdAt, user, likes, likeCount, commen
                     {body}
                 </CardDescription>
             </CardContent>
-            <CardContent extra>
-                <Button animated="vertical">
+            <CardContent extra style={{textAlign: 'center'}}> 
+                <Button color="pink" animated="vertical" onClick={handleLike} style={{marginBottom: 3, minWidth: 75}}>
                     <ButtonContent visible>
                         <Icon name={!liked ? "heart outline" : "heart filled"}/>
                         {likeCount}
@@ -27,13 +39,29 @@ export const Post = ({post: {id, body, createdAt, user, likes, likeCount, commen
                         Like
                     </ButtonContent>
                 </Button>
-                <Button animated="vertical">
+                <Button color="twitter" animated="vertical" onClick={handleReply} style={{marginBottom: 3, minWidth: 75}}>
                     <ButtonContent visible>
                         <Icon name="comment alternate outline"/>
                         {commentCount}
                     </ButtonContent>
                     <ButtonContent hidden>
                         Reply
+                    </ButtonContent>
+                </Button>
+                <Button color="violet" animated="vertical" onClick={handleShare} style={{marginBottom: 3, minWidth: 75}}>
+                    <ButtonContent visible>
+                        <Icon name="share square outline"/>
+                    </ButtonContent>
+                    <ButtonContent hidden>
+                        Share
+                    </ButtonContent>
+                </Button>
+                <Button color="red" animated="vertical" onClick={handleBlock} style={{marginBottom: 3, minWidth: 75}}>
+                    <ButtonContent visible>
+                        <Icon name="ban"/>
+                    </ButtonContent>
+                    <ButtonContent hidden>
+                        Block
                     </ButtonContent>
                 </Button>
             </CardContent>

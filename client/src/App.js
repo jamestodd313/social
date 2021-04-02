@@ -1,9 +1,9 @@
 import {BrowserRouter as Router, Route} from 'react-router-dom'
 import { Container } from 'semantic-ui-react';
 import { Nav } from './components/common/Nav';
-import { Home } from './components/home/Home';
-import { LogIn } from './components/login/LogIn';
-import { Register } from './components/register/Register';
+import { Home } from './components/pages/Home';
+import { LogIn } from './components/pages/LogIn';
+import { Register } from './components/pages/Register';
 function App() {
   return (
     <Router>

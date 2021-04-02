@@ -28,6 +28,7 @@ const validateRegistration = async(username, password, confirmPassword, email)=>
         password: false,
         confirmPassword: false
     }
+    if(!username || username.trim() == '') errors.username = "Enter a username"
 
     if(!isValidEmail(email)) errors.email = "Enter a valid email address"
     else errors.email = false

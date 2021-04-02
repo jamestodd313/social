@@ -12,8 +12,8 @@ export const Home = () => {
     },[data])
 
     return (
-        <Grid columns={3}>
-            <GridRow><h1>News Feed</h1></GridRow>
+        <Grid columns={3} style={{margin: 0}}>
+            <GridRow centered><h1>News Feed</h1></GridRow>
             <GridRow>
                 {loading ? "Loading..." : !posts ? "No posts to show" : posts.map(post=> (        
                     <GridColumn key={post.id} style={{marginBottom: 24}}>
