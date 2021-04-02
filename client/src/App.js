@@ -8,7 +8,7 @@ function App() {
   return (
     <Router>
       <Container>
-        <Nav active="home"/>
+        <Nav/>
         <Route exact path="/" component={Home}/>
         <Route exact path="/login" component={LogIn}/>
         <Route exact path="/register" component={Register}/>
