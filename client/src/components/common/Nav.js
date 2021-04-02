@@ -12,7 +12,7 @@ export const Nav = () => {
         setActiveLink(currentPage.pathname)
     },[currentPage])
     return (
-        <Menu header>
+        <Menu header="true">
             <Menu.Item header>APPPPPPPP</Menu.Item>
             <Menu.Menu position="right">
                 <Menu.Item name="home" active={activeLink === "/"} onClick={e=> setActiveLink('home')} as={Link} to="/"/>
