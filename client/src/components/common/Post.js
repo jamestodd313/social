@@ -1,6 +1,6 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
-import { Button, ButtonContent, Card, CardContent, CardDescription, CardHeader, CardMeta, GridColumn, Icon, Image } from 'semantic-ui-react'
+import { Button, ButtonContent, Card, CardContent, CardDescription, CardHeader, CardMeta, Icon, Image } from 'semantic-ui-react'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 dayjs.extend(relativeTime)

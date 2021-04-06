@@ -1,27 +1,27 @@
-import React, {useState} from 'react'
+import React, {useContext, useState} from 'react'
 import {Form, FormField, FormInput, FormButton, Icon, Message} from 'semantic-ui-react'
 import {useMutation} from '@apollo/client'
 import { REGISTER } from '../../apollo/users/register'
+import { AuthContext } from '../context/auth.js'
 
-export const Register = () => {
+export const Register = (props) => {
     const [email, setEmail] = useState('')
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
     const [errors, setErrors] = useState(null)
 
-    const [createUser, {loading}] = useMutation(REGISTER, {
-        update(proxy, result){
+    const authctx = useContext(AuthContext)
 
-        }, 
+    const [createUser, {loading}] = useMutation(REGISTER, { 
         onError(err){
             let errs = err.graphQLErrors[0].extensions.errors
             setErrors(errs)
-            console.log(errors)
         },
-        onCompleted(userDoc){
-            console.log(userDoc)
+        onCompleted(result){
             setErrors(null)
+            authctx.login(result.registerUser)
+            props.history.push('/')
         },
         variables: {email, username, password, confirmPassword}
     })
