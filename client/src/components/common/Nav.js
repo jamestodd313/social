@@ -1,13 +1,21 @@
-import React, {useEffect, useState} from 'react'
+import React, {useContext, useEffect, useState} from 'react'
 import { useLocation } from 'react-router'
 import { Link } from 'react-router-dom'
 import {Menu} from 'semantic-ui-react'
+import { AuthContext } from '../context/auth.js'
+import jwt from 'jsonwebtoken'
 
+// get tokeen from context
+// validate token
+// if validated show home and sign out buttons
+// else show login and register buttons
 
 export const Nav = () => {
     const currentPage = useLocation()
     const [activeLink, setActiveLink] = useState(currentPage.pathname)
-    const authenticated = false //** PLACEHOLDER - DELETE THIS LATER */
+    // const authenticated = false //** PLACEHOLDER - DELETE THIS LATER */
+    const authctx = useContext(AuthContext)
+
     useEffect(()=>{
         setActiveLink(currentPage.pathname)
     },[currentPage])
@@ -15,11 +23,12 @@ export const Nav = () => {
         <Menu header="true" color="blue" inverted style={{marginTop: 16}}>
             <Menu.Item header>APPPPPPPP</Menu.Item>
             <Menu.Menu position="right">
-                <Menu.Item name="home" active={activeLink === "/"} onClick={e=> setActiveLink('home')} as={Link} to="/"/>
                 {
-                    authenticated ? (
-                        <Menu.Item name="signOut" active={activeLink === "signout"} onClick={e=> setActiveLink('signOut')} as={Link} to="/"/>
-
+                    authctx.user ? (
+                        <>
+                            <Menu.Item name="home" active={activeLink === "/"} onClick={e=> setActiveLink('home')} as={Link} to="/"/>
+                            <Menu.Item name="signOut" onClick={authctx.logout}/>
+                        </>
                     ) : (
                         <>
                             <Menu.Item name="logIn" active={activeLink === "/login"} onClick={e=> setActiveLink('logIn')} as={Link} to="/login"/>
