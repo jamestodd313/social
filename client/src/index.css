@@ -29,3 +29,10 @@ code {
     transform: rotate(359deg);
   }
 }
+
+input#new-post{
+  padding-left: 12px !important;
+}
+button#post-button{
+  margin-right: -14px;
+}

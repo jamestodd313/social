@@ -1,8 +1,8 @@
 import React, {useContext, useState} from 'react'
 import {Form, FormField, FormInput, FormButton, Icon, Message} from 'semantic-ui-react'
 import {useMutation} from '@apollo/client'
-import { REGISTER } from '../../apollo/users/register'
-import { AuthContext } from '../context/auth.js'
+import { REGISTER } from '../../../apollo/users/register'
+import { AuthContext } from '../../context/auth.js'
 
 export const Register = (props) => {
     const [email, setEmail] = useState('')

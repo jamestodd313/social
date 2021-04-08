@@ -3,9 +3,9 @@ import { Container } from 'semantic-ui-react';
 import { AuthRoute } from './components/common/AuthRoute';
 import { Nav } from './components/common/Nav';
 import { AuthProvider } from './components/context/auth.js';
-import { Home } from './components/pages/Home';
-import { LogIn } from './components/pages/LogIn';
-import { Register } from './components/pages/Register';
+import { Home } from './components/pages/home/Home';
+import { LogIn } from './components/pages/login/LogIn';
+import { Register } from './components/pages/register/Register';
 function App() {
   return (
     <AuthProvider>

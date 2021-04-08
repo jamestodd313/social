@@ -1,8 +1,8 @@
 import { useMutation } from '@apollo/client'
 import {useContext, useState} from 'react'
 import {Form, FormField, Message, Icon, FormInput, FormButton} from 'semantic-ui-react'
-import { SIGNIN } from '../../apollo/users/signin'
-import { AuthContext } from '../context/auth.js'
+import { SIGNIN } from '../../../apollo/users/signin'
+import { AuthContext } from '../../context/auth.js'
  export const LogIn = (props) => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')

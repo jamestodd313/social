@@ -3,7 +3,6 @@ import { useLocation } from 'react-router'
 import { Link } from 'react-router-dom'
 import {Menu} from 'semantic-ui-react'
 import { AuthContext } from '../context/auth.js'
-import jwt from 'jsonwebtoken'
 
 // get tokeen from context
 // validate token
