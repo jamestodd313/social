@@ -1,28 +1,36 @@
 import {useEffect, useState} from 'react'
 import { Form, FormButton, FormGroup, FormInput } from 'semantic-ui-react'
-import gql from 'graphql-tag'
 import { useMutation } from '@apollo/client'
+import { FETCH_POSTS_QUERY } from '../../../apollo/posts/fetchPosts'
+import { CREATE_POST } from '../../../apollo/posts/createPost'
 
 export const PostForm = () => {
     const [postBody, setPostBody] = useState('')
     const [errors, setErrors] = useState(false)
     const [createPost, {loading, error}] = useMutation(CREATE_POST, {
         variables: {body: postBody},
+        update(proxy, result){
+            let cachedPosts = proxy.readQuery({
+                query: FETCH_POSTS_QUERY,
+            })
+            proxy.writeQuery({
+                query: FETCH_POSTS_QUERY,
+                data: {
+                  getPosts: [result.data.createPost, ...cachedPosts.getPosts],
+                },
+            })
+        },
         onError(err){
             console.error(err)
             setErrors(true)
         },
         onCompleted(res){
-            console.log(res)
             setPostBody('')
             setErrors(false)
         },
     })
     const handleSubmit = ()=> {
         createPost(postBody)
-        .then(response=>{
-            console.log(response)
-        })
         .catch(err=>{
             console.error(err)
         })
@@ -36,17 +44,3 @@ export const PostForm = () => {
         </Form>
     )
 }
-
-
-const CREATE_POST = gql`
-    mutation createPost($body: String!){
-        createPost(body: $body){
-            id
-            body
-            createdAt
-            user{
-                username
-            }
-        }
-    }
-`
