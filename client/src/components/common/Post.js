@@ -1,17 +1,40 @@
-import React from 'react'
+import React, { useContext, useState } from 'react'
 import {Link} from 'react-router-dom'
-import { Button, ButtonContent, Card, CardContent, CardDescription, CardHeader, CardMeta, Icon, Image } from 'semantic-ui-react'
+import { Button, ButtonContent, Card, CardContent, CardDescription, CardHeader, CardMeta, Confirm, Icon, Image } from 'semantic-ui-react'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
+import {useMutation} from '@apollo/client'
+import {AuthContext} from '../context/auth'
+import { DELETE_POST } from '../../apollo/posts/deletePost'
+import { FETCH_POSTS_QUERY } from '../../apollo/posts/fetchPosts'
 dayjs.extend(relativeTime)
 
 export const Post = ({post: {id, body, createdAt, user, likes, likeCount, comments, commentCount}}) => {
     let liked
+    const [confirmOpen, setConfirmOpen] = useState(false)
+    const [deletePost] = useMutation(DELETE_POST, {
+        variables: {postId: id},
+        update(proxy, result){
+            const cachedPosts = proxy.readQuery({
+                query: FETCH_POSTS_QUERY
+            })
+            const updatedPosts = cachedPosts.getPosts.filter(post=> post.id !== id)
+            proxy.writeQuery({
+                query: FETCH_POSTS_QUERY,
+                data: {
+                    getPosts: [...updatedPosts]
+                }
+            })
+        },
+        onError(err){
+            console.error(err)
+        },
+        onCompleted(result){
+            setConfirmOpen(false)
+        }
+    })
     const handleLike = ()=> {
         console.log(`liking post ${id}`)
-    }
-    const handleReply = ()=> {
-        console.log(`replying to post ${id}`)
     }
     const handleShare = ()=> {
         console.log(`sharing post ${id}`)
@@ -19,6 +42,11 @@ export const Post = ({post: {id, body, createdAt, user, likes, likeCount, commen
     const handleBlock = ()=> {
         console.log(`blocking ${user.username}`)
     }
+    const handleDelete = ()=> { 
+        deletePost(id)
+    }
+    const authctx = useContext(AuthContext)
+    const isOwnPost = ()=> authctx.user && user.username === authctx.user.username
     return (
         <Card fluid >
             <CardContent>
@@ -39,7 +67,7 @@ export const Post = ({post: {id, body, createdAt, user, likes, likeCount, commen
                         Like
                     </ButtonContent>
                 </Button>
-                <Button color="twitter" animated="vertical" onClick={handleReply} style={{marginBottom: 3, minWidth: 75}}>
+                <Button color="twitter" animated="vertical" as={Link} to={`/posts/${id}`} style={{marginBottom: 3, minWidth: 75}}>
                     <ButtonContent visible>
                         <Icon name="comment alternate outline"/>
                         {commentCount}
@@ -56,14 +84,31 @@ export const Post = ({post: {id, body, createdAt, user, likes, likeCount, commen
                         Share
                     </ButtonContent>
                 </Button>
-                <Button color="red" animated="vertical" onClick={handleBlock} style={{marginBottom: 3, minWidth: 75}}>
-                    <ButtonContent visible>
-                        <Icon name="ban"/>
-                    </ButtonContent>
-                    <ButtonContent hidden>
-                        Block
-                    </ButtonContent>
-                </Button>
+                {
+                    isOwnPost() ? (
+                        <>
+                        <Button color="red" animated="vertical" onClick={e=>setConfirmOpen(true)} style={{marginBottom: 3, minWidth: 75}}>
+                            <ButtonContent visible>
+                                <Icon name="trash alternate outline"/>
+                            </ButtonContent>
+                            <ButtonContent hidden>
+                                Delete
+                            </ButtonContent>
+                        </Button>
+                        <Confirm open={confirmOpen} onCancel={e=>setConfirmOpen(false)} onConfirm={handleDelete}/>
+                        </>
+                    ) : (
+                        <Button color="red" animated="vertical" onClick={handleBlock} style={{marginBottom: 3, minWidth: 75}}>
+                            <ButtonContent visible>
+                                <Icon name="ban"/>
+                            </ButtonContent>
+                            <ButtonContent hidden>
+                                Block
+                            </ButtonContent>
+                        </Button>           
+                    )
+                }
+                
             </CardContent>
         </Card>
     )

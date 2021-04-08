@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { FETCH_POSTS_QUERY } from '../../../apollo/posts/fetchPosts'
 import { useQuery } from '@apollo/client';
-import { Grid, GridRow, GridColumn } from 'semantic-ui-react';
+import { Grid, GridRow, GridColumn, TransitionGroup } from 'semantic-ui-react';
 import { Post } from '../../common/Post';
 import {AuthContext} from '../../context/auth'
 import { PostForm } from './PostForm';
@@ -28,11 +28,17 @@ export const Home = () => {
                 ) : null
             }
             <GridRow>
-                {loading ? "Loading..." : !posts ? "No posts to show" : posts.map(post=> (        
-                    <GridColumn key={post.id} style={{marginBottom: 24}}>
-                        <Post post={post}/>
-                    </GridColumn>
-                ))}
+                {loading ? "Loading..." : !posts ? "No posts to show" : (
+                    <TransitionGroup>
+                        {
+                            posts.map(post=> (        
+                                <GridColumn key={post.id} style={{marginBottom: 24}}>
+                                    <Post post={post}/>
+                                </GridColumn>
+                            ))
+                        }
+                    </TransitionGroup>
+                )}
             </GridRow>
             
         </Grid>

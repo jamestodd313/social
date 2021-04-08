@@ -22,7 +22,7 @@ export const PostForm = () => {
         },
         onError(err){
             console.error(err)
-            setErrors(true)
+            setErrors(err.graphQLErrors[0].message)
         },
         onCompleted(res){
             setPostBody('')
