@@ -13,13 +13,17 @@ code {
 }
 
 
-.spinner{
+#page-spinner{
   animation: spin 1s linear infinite;
   text-align: center;
   display: block !important;
   margin-left: auto !important;
   margin-right: auto !important;
   margin-top: 100px !important;
+}
+#button-spinner{
+  animation: spin 1s linear infinite;
+  margin: 0;
 }
 @keyframes spin {
   0%{

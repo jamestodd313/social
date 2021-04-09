@@ -33,7 +33,7 @@ export const Register = (props) => {
     return (
         <>
         <Form onSubmit={handleSubmit} noValidate style={{width: '375px', marginLeft: 'auto', marginRight: 'auto', marginTop: 24}}>
-            {loading ? <Icon name="spinner" size="huge" className="spinner" color="grey"/> : (
+            {loading ? <Icon id="page-spinner" name="spinner" size="huge" className="spinner" color="grey"/> : (
                 <>
                     <h1 style={{textAlign: 'center'}}>Create An Account</h1>
                     <FormField>

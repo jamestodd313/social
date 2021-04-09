@@ -1,5 +1,5 @@
-import {useEffect, useState} from 'react'
-import { Form, FormButton, FormGroup, FormInput } from 'semantic-ui-react'
+import {useState} from 'react'
+import { Form, FormButton, FormGroup, FormInput, Icon } from 'semantic-ui-react'
 import { useMutation } from '@apollo/client'
 import { FETCH_POSTS_QUERY } from '../../../apollo/posts/fetchPosts'
 import { CREATE_POST } from '../../../apollo/posts/createPost'
@@ -7,7 +7,7 @@ import { CREATE_POST } from '../../../apollo/posts/createPost'
 export const PostForm = () => {
     const [postBody, setPostBody] = useState('')
     const [errors, setErrors] = useState(false)
-    const [createPost, {loading, error}] = useMutation(CREATE_POST, {
+    const [createPost, {loading}] = useMutation(CREATE_POST, {
         variables: {body: postBody},
         update(proxy, result){
             let cachedPosts = proxy.readQuery({
@@ -38,8 +38,8 @@ export const PostForm = () => {
     return (
         <Form onSubmit={handleSubmit} autoComplete="off">
             <FormGroup>
-                <FormInput error={errors} id="new-post" type="text" label="Say something..." labelPosition="left corner" width={15} value={postBody} onChange={e=> setPostBody(e.target.value)}/>
-                <FormButton primary id="post-button" style={{marginTop: 24}} disabled={loading}>Post</FormButton>
+                <FormInput disabled={loading} error={errors} id="new-post" type="text" label="Say something..." labelPosition="left corner" width={15} value={postBody} onChange={e=> setPostBody(e.target.value)}/>
+                <FormButton primary id="post-button" style={{marginTop: 24}} disabled={loading}>{loading ? <Icon id="button-spinner" name="spinner" size="small" className="spinner" color="black"/> : "Send"}</FormButton>
             </FormGroup>
         </Form>
     )

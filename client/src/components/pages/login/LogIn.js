@@ -30,7 +30,7 @@ import { AuthContext } from '../../context/auth.js'
     return (
         <>
             <Form onSubmit={handleSubmit} noValidate style={{width: '375px', marginLeft: 'auto', marginRight: 'auto', marginTop: 24}}>
-                {loading ? <Icon name="spinner" size="huge" className="spinner" color="grey"/> : (
+                {loading ? <Icon id="page-spinner" name="spinner" size="huge" className="spinner" color="grey"/> : (
                     <>
                         <h1 style={{textAlign: 'center'}}>Sign In</h1>
                         <FormField>

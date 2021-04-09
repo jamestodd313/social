@@ -1,12 +1,9 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext } from 'react'
 import {Link} from 'react-router-dom'
-import { Button, ButtonContent, Card, CardContent, CardDescription, CardHeader, CardMeta, Confirm, Icon, Image } from 'semantic-ui-react'
+import { Card, CardContent, CardDescription, CardHeader, CardMeta, Image } from 'semantic-ui-react'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
-import {useMutation} from '@apollo/client'
 import {AuthContext} from '../context/auth'
-import { DELETE_POST } from '../../apollo/posts/deletePost'
-import { FETCH_POSTS_QUERY } from '../../apollo/posts/fetchPosts'
 import { LikeButton } from './buttons/LikeButton'
 import { ReplyButton } from './buttons/ReplyButton'
 import { ShareButton } from './buttons/ShareButton'
@@ -14,8 +11,7 @@ import { DeletePostButton } from './buttons/DeletePostButton'
 import { BlockButton } from './buttons/BlockButton'
 dayjs.extend(relativeTime)
 
-export const Post = ({post: {id, body, createdAt, user, likes, likeCount, comments, commentCount}}) => {
-    let liked
+export const Post = ({post: {id, body, createdAt, user, likeCount, likes, commentCount}}) => {
     const authctx = useContext(AuthContext)
     const isOwnPost = ()=> authctx.user && user.username === authctx.user.username
     return (
@@ -29,7 +25,7 @@ export const Post = ({post: {id, body, createdAt, user, likes, likeCount, commen
                 </CardDescription>
             </CardContent>
             <CardContent extra style={{textAlign: 'center'}}>
-                <LikeButton id={id} liked={liked} likeCount={likeCount}/>
+                <LikeButton id={id} likes={likes} likeCount={likeCount}/>
                 <ReplyButton id={id} commentCount={commentCount}/>
                 <ShareButton id={id}/>
                 { isOwnPost() ? <DeletePostButton id={id}/> : <BlockButton userToBlock={user}/> }
