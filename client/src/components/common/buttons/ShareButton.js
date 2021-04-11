@@ -1,5 +1,4 @@
 import { useState } from "react"
-import { Link } from "react-router-dom"
 import { Button, ButtonContent, Icon, Modal, ModalActions, ModalHeader } from "semantic-ui-react"
 
 export const ShareButton = ({id}) => {

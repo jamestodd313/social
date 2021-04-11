@@ -23,6 +23,7 @@ module.exports = {
                 postToCommentOn.comments.unshift(comment)
                 let postWithNewComment = await postToCommentOn.save()
                 postWithNewComment = await postWithNewComment.populate('user').populate({path: 'likes', populate: {path: 'user', model: 'User'}}).populate({path: 'comments', populate: {path: 'user', model: 'User'}}).execPopulate()
+                return postWithNewComment
             }catch(err){
                 throw new Error(err)
             }

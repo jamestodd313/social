@@ -40,3 +40,18 @@ input#new-post{
 button#post-button{
   margin-right: -14px;
 }
+
+
+#reply-form .field{
+  padding-right: 0;
+}
+
+#reply-form .field button{
+  margin-top: 14px;
+}
+@media screen and (min-width: 768px){
+  #reply-form .field button{
+    margin-left: 14px;
+    margin-top: 0px;
+  }
+}
